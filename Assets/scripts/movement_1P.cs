@@ -27,7 +27,7 @@ public class movement_1P : MonoBehaviour
             rb.velocity = new Vector2(0,rb.velocity.y);
         }
         if(Input.GetKeyDown(KeyCode.W) && jt > 0){
-            rb.AddForce(new Vector2(0,jump_force),ForceMode2D.Impulse);
+            rb.velocity = new Vector2(rb.velocity.x, jump_force);
             jt--;
         }
     }

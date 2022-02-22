@@ -7,10 +7,16 @@ public class movement_2P : MonoBehaviour
     private Rigidbody2D rb;
     public float speed;
     public float jump_force;
-    private int jt = 2;
+    private bool isGrounded;
+    public Transform GroundCheck;
+    public float CheckRadius;
+    public LayerMask Ground;
+    private int ejt;
+    public int ExtraJumpTimes;
     // Start is called before the first frame update
     void Start()
     {
+        ejt = ExtraJumpTimes;
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -26,14 +32,18 @@ public class movement_2P : MonoBehaviour
         else{
             rb.velocity = new Vector2(0,rb.velocity.y);
         }
-        if(Input.GetKeyDown(KeyCode.UpArrow) && jt > 0){
-            rb.velocity = new Vector2(rb.velocity.x, jump_force);
-            jt--;
+        
+        isGrounded = Physics2D.OverlapCircle(GroundCheck.position, CheckRadius, Ground);
+
+        if(isGrounded == true){
+            ejt = ExtraJumpTimes;
         }
-    }
-    private void OnCollisionEnter2D(Collision2D other) {
-        if(other.gameObject.tag == "floor"){
-            jt = 2;
+        if(Input.GetKeyDown(KeyCode.UpArrow) && ejt > 0){
+            rb.velocity = new Vector2(rb.velocity.x, jump_force);
+            ejt--;
+        }
+        else if(Input.GetKey(KeyCode.UpArrow) && ejt == 0 && isGrounded == true){
+            rb.velocity = new Vector2(rb.velocity.x, jump_force);
         }
     }
 }
